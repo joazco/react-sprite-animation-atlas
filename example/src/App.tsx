@@ -127,6 +127,9 @@ function App() {
             animationConfig={animations}
             atlasConfig={atlas}
             animationName={animationName}
+            center
+            responsive={false}
+            blockAtMaxSize={false}
           />
         </div>
       </article>

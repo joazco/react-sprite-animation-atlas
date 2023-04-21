@@ -12,6 +12,7 @@ import animationReducer, {
 } from "./animationReducer";
 import { AnimationProps } from ".";
 import useSprite from "./useSprite";
+import useSize from "./useSize";
 
 const useAnimationComponent = (props: AnimationProps) => {
   /**  */
@@ -20,6 +21,11 @@ const useAnimationComponent = (props: AnimationProps) => {
     atlasConfig: atlas,
     animationConfig: animations,
     animationName,
+    responsive,
+    center,
+    blockAtMaxSize,
+    blockAtMinSize,
+    minSize,
   } = props;
   /**  */
   const [state, dispatch] = useReducer(animationReducer, animationDefaultState);
@@ -31,7 +37,6 @@ const useAnimationComponent = (props: AnimationProps) => {
   /**  */
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const parentRef = useRef<HTMLDivElement>(null);
-
   /** */
   const image = useMemo(() => {
     const img = new Image();
@@ -42,11 +47,13 @@ const useAnimationComponent = (props: AnimationProps) => {
     () => animations.anims.find((a) => a.key === animationName),
     [animations, animationName]
   );
-
+  /** */
   const { currentFrame, isLastPosition, nextFrame } = useSprite(
     atlas,
     animation?.frames
   );
+  const getSize = useSize();
+  /** */
 
   const updateParentSize = useCallback(() => {
     if (parentRef.current) {
@@ -96,16 +103,23 @@ const useAnimationComponent = (props: AnimationProps) => {
     if (canvasRef.current && loaded) {
       const ctx = canvasRef.current.getContext("2d");
       ctx?.clearRect(0, 0, parentSize.w, parentSize.h);
-      const pw = parentSize.w > objectSize.w ? objectSize.w : parentSize.w;
-      const ph = parentSize.h > objectSize.h ? objectSize.h : parentSize.h;
+      const [pw, ph] = getSize(
+        parentSize,
+        objectSize,
+        !!responsive,
+        !!blockAtMaxSize,
+        !!blockAtMinSize,
+        minSize
+      );
+
       ctx?.drawImage(
         image,
         objectPosition.x,
         objectPosition.y,
         objectSize.w,
         objectSize.h,
-        0,
-        0,
+        center ? (parentSize.w - pw) / 2 : 0,
+        center ? (parentSize.h - ph) / 2 : 0,
         pw,
         ph
       );

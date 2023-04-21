@@ -1,6 +1,6 @@
 {
   "name": "react-sprite-animation-atlas",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "React component to animate a sprite from an atlas configuration",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",

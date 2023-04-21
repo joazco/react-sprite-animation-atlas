@@ -21,6 +21,11 @@ declare type AnimationProps = {
   atlasConfig: AtlasType;
   animationConfig: AnimationType;
   animationName: string;
+  center?: boolean;
+  responsive?: boolean;
+  blockAtMaxSize?: boolean;
+  blockAtMinSize?: boolean;
+  minSize?: ObjectSize;
 };
 declare type AnimationComponentProps = React.DetailedHTMLProps<
   React.HTMLAttributes<HTMLDivElement>,
